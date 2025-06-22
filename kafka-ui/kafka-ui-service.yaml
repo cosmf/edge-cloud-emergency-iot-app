@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-ui-service
+  labels:
+    app: kafka-ui
+spec:
+  type: NodePort
+  ports:
+  - port: 8080
+    targetPort: 8080
+    protocol: TCP
+    # We are choosing a static port in the valid NodePort range (30000-32767)
+    nodePort: 30080
+  selector:
+    app: kafka-ui

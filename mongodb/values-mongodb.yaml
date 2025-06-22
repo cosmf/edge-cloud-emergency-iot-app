@@ -1,0 +1,28 @@
+# Custom values for the Bitnami MongoDB Helm chart
+
+# --- Architecture ---
+# Use a highly-available Replica Set.
+architecture: replicaset
+replicaCount: 3
+
+# --- Authentication ---
+# Tell the chart to use a secret that we will create.
+# This avoids putting passwords in this file.
+auth:
+  existingSecret: "mongodb-credentials" # <-- This points to our Secret object
+  # The keys within the secret must be 'mongodb-root-password'
+  # We will create this secret in the next step.
+
+# --- Persistence ---
+persistence:
+  enabled: true
+  size: 10Gi
+
+# --- Resource Management ---
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1"
+    memory: "2Gi"

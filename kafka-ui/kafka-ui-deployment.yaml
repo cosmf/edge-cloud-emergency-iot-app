@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafka-ui
+  labels:
+    app: kafka-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafka-ui
+  template:
+    metadata:
+      labels:
+        app: kafka-ui
+    spec:
+      containers:
+      - name: kafka-ui
+        image: provectuslabs/kafka-ui:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: KAFKA_CLUSTERS_0_NAME
+          value: "gke-kafka-cluster"
+        - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+          # This is the internal Kubernetes DNS name for the Kafka service created by the Helm chart.
+          # value: "my-kafka-controller-0.my-kafka-controller-headless.default.svc.cluster.local:9092,my-kafka-controller-1.my-kafka-controller-headless.default.svc.cluster.local:9092,my-kafka-controller-2.my-kafka-controller-headless.default.svc.cluster.local:9092"
+          value: "my-kafka:9092"

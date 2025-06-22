@@ -1,0 +1,73 @@
+# Custom values for the Bitnami Kafka Helm chart
+
+# --- Architecture ---
+# Deploy 3 Kafka brokers, one for each of our GKE nodes.
+replicaCount: 3
+
+# --- Persistence ---
+# Give each of the 3 brokers its own persistent disk.
+persistence:
+  enabled: true
+  size: 8Gi # Kafka doesn't store data forever, so 8Gi is a good start.
+
+  
+
+# --- Resource Management ---
+# Set resource requests and limits for each of the 3 broker pods.
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1.5Gi" # Kafka is memory-intensive
+  limits:
+    cpu: "1"
+    memory: "2Gi"
+
+
+# --- Listener Configuration (THE FIX IS HERE) ---
+# This section explicitly configures how clients connect to Kafka.
+listeners:
+  # This is the listener for clients INSIDE the Kubernetes cluster (like Kafbat)
+  client:
+    protocol: PLAINTEXT
+    port: 9092
+    name: CLIENT
+
+# This tells the brokers what address to advertise to clients.
+# It's the most critical part of the fix.
+advertisedListeners:
+  # For the CLIENT listener, advertise the internal Kubernetes service name.
+  - CLIENT://kafka:9092
+
+# --- Declarative Topic Creation using the Provisioning Job ---
+# This is the correct way to ensure topics are created by Helm.
+provisioning:
+  enabled: true # IMPORTANT: This enables the topic creation job.
+  topics:
+    # 1. The main ingestion topic.
+    - name: raw-data
+      partitions: 3
+      replicationFactor: 3
+
+    # 2. The default stream for processed data.
+    #    Replace '8' with your calculated N = (Cloud Partitions + Edge Workers).
+    - name: default-stream-topic
+      partitions: 8
+      replicationFactor: 3
+
+    # 3. The High priority topic.
+    #    Must have the same partition count.
+    - name: H-priority-topic
+      partitions: 8
+      replicationFactor: 3
+
+    # 4. The Medium priority topic.
+    #    Must have the same partition count.
+    - name: M-priority-topic
+      partitions: 8
+      replicationFactor: 3
+
+    # 5. The Low priority topic.
+    #    Must have the same partition count.
+    - name: L-priority-topic
+      partitions: 8
+      replicationFactor: 3

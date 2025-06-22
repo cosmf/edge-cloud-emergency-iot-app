@@ -1,0 +1,30 @@
+# Custom values for the Kafbat (Kafka-UI) Helm chart
+# File: kafbat-values.yaml
+
+env:
+  # This tells the UI to allow configuration from the web interface
+  - name: DYNAMIC_CONFIG_ENABLED
+    value: "true"
+
+  # --- Corrected Kafka Cluster Configuration ---
+
+  # 1. This gives your cluster a friendly name in the UI
+  - name: KAFKA_CLUSTERS_0_NAME
+    value: "gke-kafka-cluster"
+
+  # 2. This tells the UI how to connect to your Kafka brokers.
+  #    It uses the service name 'kafka' which you found with 'kubectl get svc'.
+  - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
+    value: "kafka:9092"
+
+# This gives the UI a persistent disk to save its configuration
+# so it remembers your cluster connection after a restart.
+persistence:
+  enabled: true
+  size: 1Gi
+
+# Set some basic resource requests for stability
+resources:
+  requests:
+    cpu: "200m"
+    memory: "256Mi"

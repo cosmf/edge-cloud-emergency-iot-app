@@ -1,0 +1,32 @@
+# Custom values for the InfluxDB Helm chart
+
+# --- Persistence Configuration ---
+# This ensures your data is saved on a persistent disk.
+persistence:
+  enabled: true
+  size: 10Gi
+
+# --- Authentication & User Setup ---
+# These values are used to initialize the InfluxDB instance.
+# They are similar to your variables.env file.
+initScripts:
+  # This script runs once to set up the instance.
+  init.sh: |
+    #!/bin/sh
+    influx setup \
+      --username "admin" \
+      --password "ObaGvQy4LEGCxGF74jvFKX6XECUv4fBU" \
+      --token "tUujj2tC9k6WkiTYXA9tB2c1wHnPjFt-2hCcOptcJlDD5KNNM-vQgKRb7ij7ZmdlHowT5vRSRvAFCWroMPwieA==" \
+      --org "moby.lab" \
+      --bucket "edge-cloud-bucket" \
+      --force
+
+# --- Resource Management ---
+# This ensures the pod is stable and doesn't use too many resources.
+resources:
+  requests:
+    cpu: "500m"
+    memory: "1Gi"
+  limits:
+    cpu: "1"
+    memory: "2Gi"

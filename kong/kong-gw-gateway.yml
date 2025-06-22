@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: kong-gateway
+  namespace: kong
+spec:
+  gatewayClassName: kong-class
+  listeners:
+  - name: edge-cloud-sim
+    hostname: edge-cloud-sim.com
+    port: 80
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: All
