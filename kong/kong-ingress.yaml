@@ -1,0 +1,17 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: data-ingestion-ingress
+  annotations:
+    konghq.com/plugins: kafka-log-plugin # Attach the plugin defined above
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /ingest
+        pathType: Prefix
+        backend:
+          service:
+            name: orchestrator-service
+            port:
+              number: 80

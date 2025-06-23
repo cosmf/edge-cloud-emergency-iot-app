@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-producer-deployment
+spec:
+  replicas: 1 # We only need one instance to simulate all 50 users
+  selector:
+    matchLabels:
+      app: data-producer
+  template:
+    metadata:
+      labels:
+        app: data-producer
+    spec:
+      containers:
+      - name: data-producer
+        image: your-registry/data-producer:v1.0
+        env:
+          - name: KONG_API_GATEWAY_URL
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: KONG_API_GATEWAY_URL
+          - name: GEOLIFE_DATA_PATH
+            value: "/data/geolife"
+      volumes:
+      - name: geolife-data-storage
+        persistentVolumeClaim:
+          claimName: geolife-pvc
+      volumeMounts:
+      - name: geolife-data-storage
+        mountPath: /data/geolife

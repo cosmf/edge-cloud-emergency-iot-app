@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: edge-worker-deployment
+spec:
+  replicas: 5 # The number of worker pods we want to run
+  selector:
+    matchLabels:
+      app: edge-worker
+  template:
+    metadata:
+      labels:
+        app: edge-worker
+    spec:
+      containers:
+      - name: edge-worker
+        image: your-registry/cloud-edge-worker:v1.0 
+        command: ["python", "cloud_edge_worker.py"]
+        args: ["$(WORKER_ID)"]
+        env:
+          - name: WORKER_ID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: KAFKA_BOOTSTRAP_SERVERS
+          - name: INFLUXDB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: INFLUXDB_URL
+          - name: ORCHESTRATOR_COMPLETION_URL
+            value: "$(ORCHESTRATOR_URL)/report_completion"
+          - name: ORCHESTRATOR_URL
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: ORCHESTRATOR_URL

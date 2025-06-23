@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orchestrator-deployment
+spec:
+  replicas: 3 # 3 instances for high availability
+  selector:
+    matchLabels:
+      app: orchestrator
+  template:
+    metadata:
+      labels:
+        app: orchestrator
+    spec:
+      containers:
+      - name: orchestrator
+        image: your-container-registry/orchestrator-service:v1.0
+        ports:
+        - containerPort: 5000
+        env:
+          # Use Kubernetes service names for service discovery
+          - name: INFLUXDB_URL
+            value: "http://influxdb-service:8086"
+          - name: SCHEDULER_URL
+            value: "http://scheduler-service:5001/predict"

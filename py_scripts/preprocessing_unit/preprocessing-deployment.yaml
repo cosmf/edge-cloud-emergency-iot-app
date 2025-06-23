@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: preprocessing-deployment
+spec:
+  replicas: 3 # Run multiple instances for parallel processing
+  selector:
+    matchLabels:
+      app: preprocessing-unit
+  template:
+    metadata:
+      labels:
+        app: preprocessing-unit
+    spec:
+      containers:
+      - name: preprocessing-unit
+        image: your-registry/preprocessing-unit:v1.0
+        env:
+          - name: KAFKA_BOOTSTRAP_SERVERS
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: KAFKA_BOOTSTRAP_SERVERS
+          - name: INFLUXDB_URL
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: INFLUXDB_URL
+          - name: ORCHESTRATOR_ASSIGNMENT_URL
+            value: "$(ORCHESTRATOR_URL)/request_assignment"
+          - name: ORCHESTRATOR_URL
+            valueFrom:
+              configMapKeyRef:
+                name: edge-cloud-config
+                key: ORCHESTRATOR_URL
+          - name: INFLUXDB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: influxdb-secret
+                key: "tUujj2tC9k6WkiTYXA9tB2c1wHnPjFt-2hCcOptcJlDD5KNNM-vQgKRb7ij7ZmdlHowT5vRSRvAFCWroMPwieA=="

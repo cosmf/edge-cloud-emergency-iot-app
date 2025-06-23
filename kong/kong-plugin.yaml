@@ -1,0 +1,10 @@
+apiVersion: configuration.konghq.com/v1
+kind: KongPlugin
+metadata:
+  name: kafka-log-plugin
+config:
+  bootstrap_servers:
+    - "kafka-service:9092" # Points to the internal Kafka service
+  topic: "raw-data" # The destination topic for all incoming data
+  timeout: 1000
+plugin: kafka-log

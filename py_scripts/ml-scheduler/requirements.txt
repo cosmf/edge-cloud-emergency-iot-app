@@ -1,0 +1,20 @@
+# Web Framework for Orchestrator and Scheduler APIs
+Flask
+
+# Kafka client for Python
+kafka-python
+
+# InfluxDB client library
+influxdb-client
+
+# HTTP requests library for service-to-service communication
+requests
+
+# Core library for Machine Learning (includes joblib)
+scikit-learn
+
+# Data manipulation and analysis (for creating the model)
+pandas
+
+# Numerical operations, dependency for scikit-learn and pandas
+numpy

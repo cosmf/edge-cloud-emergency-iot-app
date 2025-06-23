@@ -4,9 +4,6 @@ controller:
       tag: "3.4"
     env:
       feature_gates: "FillIDs=true"
-      # KONG_ADMIN_URL: http://kong-gateway-kong-manager.kong.svc:8001
-      # How do I authenticate to it?
-      # KONG_ADMIN_TOKEN: "kpat_RvYpFT2Xuea3vWAAqaWmMnJ3vFjEyjYEoMvIarV3l3Ywrdy6Q"
     konnect:
       license:
         enabled: true
@@ -19,25 +16,8 @@ gateway:
   image:
     repository: kong/kong-gateway
     tag: "3.10"
-  # admin:
-  #   enabled: true
-  #   type: ClusterIP
-  #   service:
-  #     name: kong-gateway-admin
-  #     ports:
-  #       http: 8001
-  #       tls: 8444
-  #   http:
-  #     enabled: true
-  #   tls:
-  #     enabled: false
-  #   ingress:
-  #     enabled: true
-  #     ingressClassName: kong
-  #     hostname: 34.118.226.76.nip.io
 
   env:
-    # KONG_ADMIN_TOKEN: "kpat_RvYpFT2Xuea3vWAAqaWmMnJ3vFjEyjYEoMvIarV3l3Ywrdy6Q"
     konnect_mode: "on"
     vitals: "off"
     cluster_mtls: pki
@@ -52,10 +32,7 @@ gateway:
     nginx_http_keepalive_requests: "100000"
     proxy_access_log: "off"
     dns_stale_ttl: "3600"
-    # enforce_rbac: "on"
-    # admin_gui_auth: basic-auth
-    # admin_gui_session_conf: '{"secret":"kong", "cookie_lifetime":300000, "cookie_renew":200000, "cookie_name":"kong_cookie", "cookie_secure":false, "cookie_samesite": "off"}'
-    
+
   resources:
     requests:
       cpu: 1

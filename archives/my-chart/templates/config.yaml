@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-configmap
+data:
+  message: {{ .Values.message }}
+  {{- if .Values.weekend.enabled }}
+  specialMessage: "Special deal for fruit tarts!"
+  {{- end }}
+  drinksMenu:
+    {{- range .Values.menu.drinks}}
+    name: {{ .name }}
+    price: {{ .price}}
+    {{- end }}
+  desertsMenu:
+    {{- range .Values.menu.deserts}}
+    name: {{ .name }}
+    price: {{ .price }}
+    {{- end }}
+  bonus: {{ .Values.bonus }}
